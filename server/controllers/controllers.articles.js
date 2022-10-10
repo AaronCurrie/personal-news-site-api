@@ -1,4 +1,4 @@
-const { fetchArticle } = require('../models/models.articles')
+const { fetchArticle, editArticleVotes } = require('../models/models.articles')
 
 exports.getArticle = (req, res, next) => {
     
@@ -9,5 +9,13 @@ exports.getArticle = (req, res, next) => {
     })
     .catch(err => {
         next(err)
+    })
+}
+
+exports.patchArticles = (req, res, next) => {
+    const id = req.params.article_id;
+
+    editArticleVotes(id).then(article => {
+        res.status(201).send({article})
     })
 }
