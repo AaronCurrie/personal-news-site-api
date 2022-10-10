@@ -8,6 +8,7 @@ const {
 const db = require('../db/connection');
 const app = require('../server/app');
 const request = require('supertest');
+const { response } = require('express')
 
 beforeEach(() => seed({     
     articleData,
@@ -21,5 +22,18 @@ afterAll(() => {
 
 describe(`GET/api/topics`, () => {
     test('status 200 returns topics', () => {
+        return request(app).get('/api/topics').expect(200)
+        .then(({ body: { topics } }) => {
+            expect(topics).toBeInstanceOf(Array);
+            expect(topics.length).toBe(3);
+            topics.forEach(topic => {
+                expect(topic).toEqual(
+                    expect.objectContaining({
+                        slug: expect.any(String),
+                        description: expect.any(String),
+                    })
+                );
+            });
+        });
     });
 });
