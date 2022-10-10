@@ -68,4 +68,31 @@ describe('GET/api/articles/:article_id', () => {
             expect(msg).toBe('Path not found')
         })
     });
+
+    test('bad request on path', () => {
+        return request(app).get('/api/articles/ONE').expect(400)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('incorrect data type used on path')
+        })
+    });
+
+});
+
+describe('GET/api/users', () => {
+    test('returns 200 and array of users', () => {
+        return request(app).get('/api/users').expect(200)
+        .then(({ body: { users } }) => {
+            expect(users).toBeInstanceOf(Array);
+            expect(users.length).toBe(4);
+            users.forEach(user => {
+                expect(user).toEqual(
+                    expect.objectContaining({
+                        username: expect.any(String),
+                        name: expect.any(String),
+                        avatar_url: expect.any(String)
+                    })
+                );
+            });
+        });
+    });
 });
