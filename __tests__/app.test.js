@@ -67,11 +67,18 @@ describe('GET/api/articles/:article_id', () => {
         .then(({body: { msg }}) => {
             expect(msg).toBe('Path not found')
         })
+    }); 
+
+    test('bad request on path', () => {
+        return request(app).get('/api/articles/ONE').expect(400)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('incorrect data type inputted')
+        })
     });
 });
 
-xdescribe('PATCH', () => {
-    test('returns a 201 and the updated oject', () => {
+describe('PATCH/api/articles/:article_id', () => {
+    test('returns a 201 and the updated oject when incrementing', () => {
         const update = {inc_votes: 43}
 
         return request(app).patch('/api/articles/1').send(update).expect(200)
@@ -81,13 +88,93 @@ xdescribe('PATCH', () => {
                 expect.objectContaining({
                     author: "butter_bridge",
                     title: "Living in the shadow of a great man",
-                    article_id: 44,
+                    article_id: 1,
                     body: "I find this existence challenging",
                     topic: "mitch",
                     created_at: "2020-07-09T20:11:00.000Z",
-                    votes: 100
+                    votes: 143
                 })
             );
+        })
+    })
+
+    test('returns a 201 and the updated oject when decrementing', () => {
+        const update = {inc_votes: -1}
+
+        return request(app).patch('/api/articles/1').send(update).expect(200)
+        .then(({ body: { article } }) => {
+            expect(article).toBeInstanceOf(Object);
+            expect(article).toEqual(
+                expect.objectContaining({
+                    author: "butter_bridge",
+                    title: "Living in the shadow of a great man",
+                    article_id: 1,
+                    body: "I find this existence challenging",
+                    topic: "mitch",
+                    created_at: "2020-07-09T20:11:00.000Z",
+                    votes: 99
+                })
+            );
+        })
+    })
+
+    test('incorrect id inputted', () => {
+        const update = {inc_votes: 43}
+        return request(app).patch('/api/articles/9999').send(update).expect(404)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('that article id does not exsist')
+        })
+    });
+
+    test('no id inputted', () => {
+        const update = {inc_votes: 43}
+        return request(app).patch('/api/articles/').send(update).expect(404)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('Path not found')
+        })
+    }); 
+
+    test('bad request on path', () => {
+        const update = {inc_votes: 43}
+        return request(app).patch('/api/articles/ONE').send(update).expect(400)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('incorrect data type inputted')
+        })
+    });
+
+    test('returns 400 when inputted patch data is incorrectly formatted', () => {
+        const update = {inc_votes: 'one'}
+        return request(app).patch('/api/articles/1').send(update).expect(400)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('incorrect data type inputted')
+        })
+    });
+
+    test('returns 400 when incorrect patch data is inputted', () => {
+        const update = {article_name: 'I love coding'}
+        return request(app).patch('/api/articles/1').send(update).expect(400)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('incorrect data format')
+        })
+    });
+})
+
+
+describe('GET/api/users', () => {
+    test('returns 200 and array of users', () => {
+        return request(app).get('/api/users').expect(200)
+        .then(({ body: { users } }) => {
+            expect(users).toBeInstanceOf(Array);
+            expect(users.length).toBe(4);
+            users.forEach(user => {
+                expect(user).toEqual(
+                    expect.objectContaining({
+                        username: expect.any(String),
+                        name: expect.any(String),
+                        avatar_url: expect.any(String)
+                    })
+                );
+            });
         });
     });
 });
