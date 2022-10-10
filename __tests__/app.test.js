@@ -1,26 +1,17 @@
 const seed = require('../db/seeds/seed');
-const {
-    articleData,
-    commentData,
-    topicData,
-    userData
-} = require('../db/data/test-data/index');
+const testData = require('../db/data/test-data/index');
 const db = require('../db/connection');
 const app = require('../server/app');
 const request = require('supertest');
 const { response } = require('express')
 
-beforeEach(() => seed({     
-    articleData,
-    commentData,
-    topicData,
-    userData }));
+beforeEach(() => seed(testData));
 
 afterAll(() => {
     db.end();
 });
 
-describe(`GET/api/article`, () => {
+describe(`GET/api/topics`, () => {
     test('status 200 returns topics', () => {
         return request(app).get('/api/topics').expect(200)
         .then(({ body: { topics } }) => {

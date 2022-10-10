@@ -13,7 +13,7 @@ app.get('/api/articles/:article_id', getArticle)
 
 
 //catch response for incorrect paths
-app.use((req, res, next) => {
+app.all('/api/*',(req, res, next) => {
     res.status(404).send({ msg: "Path not found" })
 })
 
