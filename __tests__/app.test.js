@@ -45,7 +45,7 @@ describe(`GET/api/article`, () => {
     });
 });
 
-describe.only('GET/api/articles/:article_id', () => {
+describe('GET/api/articles/:article_id', () => {
     test('status 200 returns topic with the id', () => {
         return request(app).get('/api/articles/1').expect(200)
         .then(({ body: { article } }) => {
@@ -68,6 +68,13 @@ describe.only('GET/api/articles/:article_id', () => {
         return request(app).get('/api/articles/9999').expect(404)
         .then(({body: { msg }}) => {
             expect(msg).toBe('that article id does not exsist')
+        })
+    });
+
+    test('no id inputted', () => {
+        return request(app).get('/api/articles/').expect(404)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('Path not found')
         })
     });
 });
