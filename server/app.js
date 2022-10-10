@@ -3,30 +3,19 @@ const express = require('express');
 const { getTopics } = require('./controllers/controllers.topics')
 
 const app = express();
-app.use(express.json());
 
 app.get('/api/topics', getTopics)
 
 
-//error codes
+//catch response for incorrect paths
+app.use((req, res, next) => {
+    res.status(404).send({ msg: "Path not found" })
+})
 
-//js errors
-app.use((err, req, res, next) => {
-    if (err.status && err.msg) {
-        res.status(err.status).send({ msg: err.msg });
-    } else {
-        next(err);
-    }
-});
-
-//PSQL errors
-app.use((err, req, res, next) => {
-    next(err)
-});
-
+//500 error
 app.use((err, req, res, next) => {
     console.log(err);
-    res.sendStatus(500);
+    res.status(500);
 });
 
 module.exports = app;

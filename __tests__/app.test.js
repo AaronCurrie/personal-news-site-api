@@ -36,4 +36,11 @@ describe(`GET/api/topics`, () => {
             });
         });
     });
+
+    test('status 404 with incorrect path', () => {
+        return request(app).get('/api/tropics').expect(404)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('Path not found')
+        })
+    });
 });
