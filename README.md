@@ -21,3 +21,4 @@ To run this project locally and access the data base follow these steps:
 5. run the script **npm run test** to run the test suites or **npm run run-dev** to run the server with the development data
 
 
+
