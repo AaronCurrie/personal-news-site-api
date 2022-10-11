@@ -116,4 +116,16 @@ describe('Including comment count to articles', () => {
             );
         });
     });
+
+    test('/still returns object with count of one', () => {
+        return request(app).get('/api/articles/2').expect(200)
+        .then(({ body: { article } }) => {
+            expect(article).toBeInstanceOf(Object);
+            expect(article).toEqual(
+                expect.objectContaining({
+                    votes: 0
+                })
+            );
+        });
+    })
 });
