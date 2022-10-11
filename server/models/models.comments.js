@@ -6,6 +6,7 @@ exports.fetchComments = (id) => {
     FROM comments
     JOIN articles ON comments.article_id = articles.article_id
     WHERE articles.article_id=$1
+    ORDER BY created_at ASC
     `, [id])
 
     .then(({rows: comments}) => {

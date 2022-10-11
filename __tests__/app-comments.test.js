@@ -17,6 +17,7 @@ describe('GET api/articles/id/comments', () => {
         .then(({ body: { comments } }) => {
             expect(comments).toBeInstanceOf(Array);
             expect(comments.length > 0).toBe(true);
+            expect(comments).toBeSortedBy('created_at')
             comments.forEach(comment => {
                 expect(comment).toEqual(
                     expect.objectContaining({

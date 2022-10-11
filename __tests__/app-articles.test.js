@@ -154,7 +154,7 @@ describe('Including comment count to articles', () => {
 });
 
 
-describe.only('api/articles', () => {
+describe('api/articles', () => {
     test('returns 200 and all articles', () => {
         return request(app).get('/api/articles').expect(200)
         .then(({ body: { articles } }) => {
