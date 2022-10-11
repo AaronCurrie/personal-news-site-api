@@ -54,7 +54,7 @@ describe('GET/api/articles/:article_id', () => {
 
 
 describe('PATCH/api/articles/:article_id', () => {
-    test('returns a 201 and the updated oject when incrementing', () => {
+    test('returns a 200 and the updated oject when incrementing', () => {
         const update = {inc_votes: 43}
 
         return request(app).patch('/api/articles/1').send(update).expect(200)
@@ -74,7 +74,7 @@ describe('PATCH/api/articles/:article_id', () => {
         })
     })
 
-    test('returns a 201 and the updated oject when decrementing', () => {
+    test('returns a 200 and the updated oject when decrementing', () => {
         const update = {inc_votes: -1}
 
         return request(app).patch('/api/articles/1').send(update).expect(200)
