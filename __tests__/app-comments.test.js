@@ -11,7 +11,7 @@ afterAll(() => {
     db.end();
 });
 
-xdescribe('GET api/articles/id/comments', () => {
+describe('GET api/articles/id/comments', () => {
     test('return 200 and array of comments for article', () => {
         return request(app).get('/api/articles/1/comments').expect(200)
         .then(({ body: { comments } }) => {
@@ -20,7 +20,7 @@ xdescribe('GET api/articles/id/comments', () => {
             comments.forEach(comment => {
                 expect(comment).toEqual(
                     expect.objectContaining({
-                        comment_id: expect.any(String),
+                        comment_id: expect.any(Number),
                         votes: expect.any(Number),
                         created_at: expect.any(String),
                         author: expect.any(String),
