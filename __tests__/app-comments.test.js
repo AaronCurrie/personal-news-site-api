@@ -46,3 +46,9 @@ describe('GET api/articles/id/comments', () => {
         })
     });
 });
+
+describe('POST /pi/articles/id/comment', () => {
+    test('return 201 and posted comment is returned if a valid username is provided', () => {
+        const input = {username: 'butter_bridge', }
+    });
+});
