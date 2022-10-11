@@ -19,6 +19,18 @@ exports.fetchArticle = (id) => {
     })
 }
 
+exports.fetchAllArticles = () => {
+    return db
+    .query(`
+    SELECT articles.*, COUNT(comments.article_id) ::INT AS comment_count
+    FROM articles
+    LEFT JOIN comments ON articles.article_id = comments.article_id
+    GROUP BY articles.article_id;`)
+    .then(({ rows: articles }) => {
+        return articles;
+    });
+}
+
 exports.updateArticleVotes = (id, votes) => {
 
     return db.query(`UPDATE articles SET votes = votes + $2 WHERE article_id = $1 RETURNING *;`, [id, votes])
