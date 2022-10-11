@@ -15,7 +15,6 @@ exports.fetchArticle = (id) => {
         } else {
             return article[0]
         }
-        
     })
 }
 
