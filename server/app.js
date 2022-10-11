@@ -1,7 +1,7 @@
 const express = require('express');
 
 const { getTopics } = require('./controllers/controllers.topics')
-const { getArticle } = require('./controllers/controllers.articles')
+const { getArticle, getAllArticles } = require('./controllers/controllers.articles')
 const { getUsers } = require('./controllers/controllers.users')
 
 const app = express();
@@ -11,6 +11,7 @@ app.get('/api/topics', getTopics)
 
 //api/articles
 app.get('/api/articles/:article_id', getArticle)
+app.get('/api/articles', getAllArticles)
 
 //api/users
 app.get('/api/users', getUsers)
