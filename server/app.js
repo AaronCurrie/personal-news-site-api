@@ -1,10 +1,9 @@
 const express = require('express');
 
 const { getTopics } = require('./controllers/controllers.topics')
-
 const { getArticle, getAllArticles, patchArticle } = require('./controllers/controllers.articles')
-
 const { getUsers } = require('./controllers/controllers.users')
+const { psqlErrors, internalError, javascriptErrors} = require('./controllers/controllers.errors')
 
 const app = express();
 app.use(express.json())
@@ -29,29 +28,12 @@ app.all('/api/*',(req, res, next) => {
 })
 
 //js errors 
-app.use((err, req, res, next) => {
-    if(err.status) {
-        res.status(err.status).send({ msg: err.msg })
-    } else {
-        next(err)
-    }
-})
+app.use(javascriptErrors)
 
 //PSQL erros
-app.use((err, req, res, next) => {
-    if(err.code === '22P02') {
-        res.status(400).send({msg: 'incorrect data type inputted'})
-    } else if(err.code === '23502') {
-        res.status(400).send({msg: 'incorrect data format'})
-    } else {
-        next(err)
-    }
-})
+app.use(psqlErrors)
 
 //500 error
-app.use((err, req, res, next) => {
-    console.log(err);
-    res.status(500).send({ msg: "internal server error"});
-});
+app.use(internalError);
 
 module.exports = app;

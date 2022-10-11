@@ -37,13 +37,6 @@ describe('GET/api/articles/:article_id', () => {
         })
     });
 
-    test('no id inputted', () => {
-        return request(app).get('/api/articles/').expect(404)
-        .then(({body: { msg }}) => {
-            expect(msg).toBe('Path not found')
-        })
-    }); 
-
     test('bad request on path', () => {
         return request(app).get('/api/articles/ONE').expect(400)
         .then(({body: { msg }}) => {
