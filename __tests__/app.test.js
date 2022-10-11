@@ -96,3 +96,24 @@ describe('GET/api/users', () => {
         });
     });
 });
+
+describe('Including comment count to articles', () => {
+    test('GET api/articles/id will also return a comment count', () => {
+        return request(app).get('/api/articles/1').expect(200)
+        .then(({ body: { article } }) => {
+            expect(article).toBeInstanceOf(Object);
+            expect(article).toEqual(
+                expect.objectContaining({
+                    comment_count: 11,
+                    author: "butter_bridge",
+                    title: "Living in the shadow of a great man",
+                    article_id: 1,
+                    body: "I find this existence challenging",
+                    topic: "mitch",
+                    created_at: "2020-07-09T20:11:00.000Z",
+                    votes: 100
+                })
+            );
+        });
+    });
+});
