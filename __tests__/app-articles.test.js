@@ -152,3 +152,58 @@ describe('Including comment count to articles', () => {
         });
     })
 });
+
+
+describe('api/articles', () => {
+    test('returns 200 and all articles', () => {
+        return request(app).get('/api/articles').expect(200)
+        .then(({ body: { articles } }) => {
+            expect(articles).toBeInstanceOf(Array);
+            expect(articles.length).toBe(12)
+            articles.forEach(article => {
+                expect(article).toEqual(expect.objectContaining({
+                    author: expect.any(String),
+                    title: expect.any(String),
+                    article_id: expect.any(Number),
+                    body: expect.any(String),
+                    topic: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                    comment_count: expect.any(Number)
+                })
+            );
+            })
+        });
+    });
+
+    test('accepts topic Query and returns all the articles related to the query', () => {
+        return request(app).get('/api/articles?topic=cats').expect(200)
+        .then(({ body: { articles } }) => {
+            expect(articles).toBeInstanceOf(Array);
+            expect(articles.length).toBe(1)
+        });
+    })
+
+    test('articles are ordered in desc date order', () => {
+        return request(app).get('/api/articles').expect(200)
+        .then(({ body: { articles } }) => {
+            expect(articles).toBeSortedBy('created_at', {descending: true})
+        })
+    })
+
+    test('returns 200 and an empty array if topic exisits but has no articles', () => {
+        return request(app).get('/api/articles?topic=paper').expect(200)
+        .then(({ body: { articles } }) => {
+            expect(articles).toBeInstanceOf(Array);
+            expect(articles.length).toBe(0)
+        })
+    });
+
+    test('returns 404 and error if query is incorrect', () => {
+        return request(app).get('/api/articles?topic=cheese').expect(404)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('invalid topic')
+        })
+    });
+
+});

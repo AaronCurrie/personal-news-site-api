@@ -18,13 +18,19 @@ exports.fetchArticle = (id) => {
     })
 }
 
-exports.fetchAllArticles = () => {
-    return db
-    .query(`
-    SELECT articles.*, COUNT(comments.article_id) ::INT AS comment_count
+exports.fetchAllArticles = (query) => {
+
+    const queryArr = [];
+    let baseQuery = `SELECT articles.*, COUNT(comments.article_id) ::INT AS comment_count
     FROM articles
-    LEFT JOIN comments ON articles.article_id = comments.article_id
-    GROUP BY articles.article_id;`)
+    LEFT JOIN comments ON articles.article_id = comments.article_id`;
+    if(query) {
+        baseQuery += ` WHERE topic=$1`;
+        queryArr.push(query)
+    }
+    baseQuery += ` GROUP BY articles.article_id ORDER BY created_at DESC;`;
+
+    return db.query(baseQuery, queryArr)
     .then(({ rows: articles }) => {
         return articles;
     });

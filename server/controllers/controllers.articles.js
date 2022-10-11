@@ -1,6 +1,7 @@
 
 const { fetchArticle, fetchAllArticles, updateArticleVotes } = require('../models/models.articles')
-const { fetchComments } = require('../models/models.comments')
+const { fetchComments } = require('../models/models.comments');
+const { checkTopicsSlugs } = require('../models/models.topics');
 
 
 exports.getArticle = (req, res, next) => {
@@ -15,12 +16,26 @@ exports.getArticle = (req, res, next) => {
     })
 }
 
+
+
 exports.getAllArticles = (req, res, next) => {
-    fetchAllArticles().then(articles => {
-        res.status(200).send({articles})
+    const query = req.query.topic;
+
+    const promises = [fetchAllArticles(query)]
+
+    if(query) {
+        promises.push(checkTopicsSlugs(query))
+    }
+
+    return Promise.all(promises)
+    .then((promises) => {
+        res.status(200).send({articles: promises[0]})
     })
     .catch(err => next(err))
 }
+
+
+
 
 exports.patchArticle = (req, res, next) => {
     const id = req.params.article_id;

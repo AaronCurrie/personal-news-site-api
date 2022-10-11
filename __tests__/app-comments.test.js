@@ -3,7 +3,7 @@ const testData = require('../db/data/test-data/index');
 const db = require('../db/connection');
 const app = require('../server/app');
 const request = require('supertest');
-const { response } = require('express')
+const { response } = require('express');
 
 beforeEach(() => seed(testData));
 
@@ -17,6 +17,7 @@ describe('GET api/articles/id/comments', () => {
         .then(({ body: { comments } }) => {
             expect(comments).toBeInstanceOf(Array);
             expect(comments.length > 0).toBe(true);
+            expect(comments).toBeSortedBy('created_at')
             comments.forEach(comment => {
                 expect(comment).toEqual(
                     expect.objectContaining({
@@ -44,11 +45,5 @@ describe('GET api/articles/id/comments', () => {
         .then(({body: { msg }}) => {
             expect(msg).toBe('that article id does not exsist')
         })
-    });
-});
-
-describe('POST /pi/articles/id/comment', () => {
-    test('return 201 and posted comment is returned if a valid username is provided', () => {
-        const input = {username: 'butter_bridge', }
     });
 });
