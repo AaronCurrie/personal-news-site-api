@@ -19,9 +19,99 @@
           "topic": "cooking",
           "author": "weegembump",
           "body": "Text from the article..",
-          "created_at": 1527695953341
+          "created_at": 1527695953341,
+          "votes": "34",
+          "comment_count": "13"
         }
       ]
+    }
+  },
+  "GET /api/articles/:article_id": {
+    "description": "serves single article with inputted id",
+    "queries": [],
+    "exampleResponse": {
+      "article":
+        {
+          "title": "Seafood substitutions are increasing",
+          "topic": "cooking",
+          "author": "weegembump",
+          "body": "Text from the article..",
+          "created_at": 1527695953341,
+          "votes": "34",
+          "comment_count": "13"
+        }
+    }
+  },
+  "GET /api/users": {
+    "description": "serves an array of all users",
+    "queries": [],
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "bob-geldorf",
+          "name": "bob geldorf",
+          "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/d/d6/Mr-Tickle-9a.png/revision/latest?cb=20180127221953"
+        },
+        {
+          "username": "not-harry-potter",
+          "name": "Harry Potter",
+          "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/d/d6/Mr-Potter-9a.png/revision/latest?cb=20180127221953"
+        }
+      ]
+    }
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "serves an array of all comments for inputted article",
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
+          "body": "I loved this article",
+          "votes": "12",
+          "author": "butter_bridge",
+          "article_id": "12",
+          "created_at": "1590103140000",
+          "comment_id": "23"
+        },
+        {
+          "body": "I did not like this article much it was pure trash, btw has anyone heard of that famous wizard he is really cool",
+          "votes": "-34",
+          "author": "not-a-famous-wizard",
+          "article_id": "12",
+          "created_at": "1600820280000",
+          "comment_id": "30"
+        }
+      ]
+    }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "posts a comment to the inputted article and serves up the new post",
+    "queries": [],
+    "exampleResponse": {
+      "comment":
+      {
+        "body": "hey check out harry potter man he is cool we should all like his articles",
+        "votes": "-34",
+        "author": "not-harry-potter",
+        "article_id": "12",
+        "created_at": "1600820280000",
+        "comment_id": "36"
+      }
+    }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "changes the articles votes of the article with inputted id and returns the updated article",
+    "queries": [],
+    "exampleResponse": {
+      "comment":
+      {
+        "title": "Seafood substitutions are increasing",
+        "topic": "cooking",
+        "author": "weegembump",
+        "body": "Text from the article..",
+        "created_at": "1527695953341",
+        "votes": "103"
+      }
     }
   }
 }
