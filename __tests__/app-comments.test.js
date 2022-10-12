@@ -48,11 +48,11 @@ describe('GET api/articles/id/comments', () => {
     });
 });
 
-xdescribe('POST /pi/articles/id/comment', () => {
+describe('POST /api/articles/id/comment', () => {
     test('return 201 and posted comment is returned if a valid username is provided', () => {
         const input = {username: 'butter_bridge', body: 'I loved this article'}
 
-        return request(app).post('/api/articles/2/comments').send(input).expect(200)
+        return request(app).post('/api/articles/2/comments').send(input).expect(201)
         .then(({ body: { comment } }) => {
             expect(comment).toBeInstanceOf(Object);
             expect(comment).toEqual(
@@ -61,21 +61,22 @@ xdescribe('POST /pi/articles/id/comment', () => {
                     votes: 0,
                     author: "butter_bridge",
                     article_id: expect.any(Number),
-                    created_at: expect.any(Number)
+                    created_at: expect.any(String),
+                    comment_id: expect.any(Number)
                 })
             );
         })
     });
 
-    test('returns 404 when incorrect path id inputted', () => {
+    test('returns 404 when inputted id does not exsit', () => {
         const input = {username: 'butter_bridge', body: 'I loved this article'}
         return request(app).post('/api/articles/9999/comments').send(input).expect(404)
         .then(({body: { msg }}) => {
-            expect(msg).toBe('that article id does not exsist')
+            expect(msg).toBe('Information not found')
         })
     });
 
-    test('returns 404 when wrong data is inputted on path', () => {
+    test('returns 400 when wrong data is inputted on path', () => {
         const input = {username: 'butter_bridge', body: 'I loved this article'}
         return request(app).post('/api/articles/ONE/comments').send(input).expect(400)
         .then(({body: { msg }}) => {
@@ -83,27 +84,19 @@ xdescribe('POST /pi/articles/id/comment', () => {
         })
     });
 
-    test('returns 400 when inputted post data has incorrect data type', () => {
-        const input = {username: 'butter_bridge', body: 12}
-        return request(app).post('/api/articles/1').send(input).expect(400)
-        .then(({body: { msg }}) => {
-            expect(msg).toBe('incorrect data type inputted')
-        })
-    });
-
     test('returns 400 when incorrect post data is inputted', () => {
         const input = {article_name: 'I love coding'}
-        return request(app).post('/api/articles/1').send(input).expect(400)
+        return request(app).post('/api/articles/1/comments').send(input).expect(400)
         .then(({body: { msg }}) => {
             expect(msg).toBe('incorrect data format')
         })
     });
 
-    test('returns 400 and fails to post if username is not valid', () => {
+    test('returns 404 and fails to post if username is not valid', () => {
         const input = {username: 'aaronCurrie', body: 'This is a great article'}
-        return request(app).post('/api/articles/1').send(input).expect(400)
+        return request(app).post('/api/articles/1/comments').send(input).expect(404)
         .then(({body: { msg }}) => {
-            expect(msg).toBe('incorrect data format')
+            expect(msg).toBe('Information not found')
         })
     })
 });

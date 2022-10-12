@@ -34,9 +34,6 @@ exports.getAllArticles = (req, res, next) => {
     .catch(err => next(err))
 }
 
-
-
-
 exports.patchArticle = (req, res, next) => {
     const id = req.params.article_id;
     const body = req.body.inc_votes;

@@ -4,6 +4,7 @@ const { getTopics } = require('./controllers/controllers.topics')
 const { getArticle, getAllArticles, patchArticle, getArticleComments } = require('./controllers/controllers.articles')
 const { getUsers } = require('./controllers/controllers.users')
 const { psqlErrors, internalError, javascriptErrors} = require('./controllers/controllers.errors')
+const { postArticleComment } = require('./controllers/controllers.comment')
 
 const app = express();
 app.use(express.json())
@@ -17,6 +18,7 @@ app.get('/api/articles', getAllArticles)
 app.patch('/api/articles/:article_id', patchArticle)
 
 app.get('/api/articles/:article_id/comments', getArticleComments)
+app.post('/api/articles/:article_id/comments', postArticleComment)
 
 //api/users
 app.get('/api/users', getUsers)
