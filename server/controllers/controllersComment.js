@@ -1,5 +1,5 @@
-const { addCommentToArticle, removeComment } = require('../models/models.comments')
-const { fetchArticle} = require('../models/models.articles')
+const { addCommentToArticle, removeComment } = require('../models/modelsComments')
+const { fetchArticle} = require('../models/modelsArticles')
 const { response } = require('express');
 
 

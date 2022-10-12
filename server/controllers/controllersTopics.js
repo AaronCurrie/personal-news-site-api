@@ -1,6 +1,6 @@
 const {
     fetchTopics,
-} = require('../models/models.topics');
+} = require('../models/modelsTopics');
 
 exports.getTopics = (req, res, next) => {
     
