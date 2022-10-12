@@ -5,9 +5,15 @@ const { getArticle, getAllArticles, patchArticle, getArticleComments } = require
 const { getUsers } = require('./controllers/controllers.users')
 const { psqlErrors, internalError, javascriptErrors} = require('./controllers/controllers.errors')
 const { postArticleComment } = require('./controllers/controllers.comment')
+const apiData = require('../endpoints.json')
 
 const app = express();
 app.use(express.json())
+
+//api
+app.get('/api', (req, res, next) => {
+    res.status(200).send({apiData})
+})
 
 //api/topics
 app.get('/api/topics', getTopics)
