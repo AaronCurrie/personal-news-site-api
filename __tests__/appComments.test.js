@@ -3,7 +3,6 @@ const testData = require('../db/data/test-data/index');
 const db = require('../db/connection');
 const app = require('../server/app');
 const request = require('supertest');
-const { response } = require('express');
 
 beforeEach(() => seed(testData));
 
@@ -99,4 +98,22 @@ describe('POST /api/articles/id/comment', () => {
             expect(msg).toBe('Information not found')
         })
     })
+});
+
+describe('DELETE api/comment/comment_id', () => {
+    test('returns 204 and returns nothing', () => {
+        return request(app).delete('/api/comments/1').expect(204)
+    });
+    test('returns 404 if comment_id is does not exist', () => {
+        return request(app).delete('/api/comments/9999').expect(404)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('comment id does not exist, nothing deleted')
+        })
+    });
+    test('returns 400 if comment_id is invalid', () => {
+        return request(app).delete('/api/comments/apples').expect(400)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('incorrect data type inputted')
+        })
+    });
 });

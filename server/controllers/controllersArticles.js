@@ -1,7 +1,7 @@
 
-const { fetchArticle, fetchAllArticles, updateArticleVotes } = require('../models/models.articles')
-const { fetchComments } = require('../models/models.comments');
-const { checkTopicsSlugs } = require('../models/models.topics');
+const { fetchArticle, fetchAllArticles, updateArticleVotes } = require('../models/modelsArticles')
+const { fetchComments } = require('../models/modelsComments');
+const { checkTopicsSlugs } = require('../models/modelsTopics');
 
 
 exports.getArticle = (req, res, next) => {
