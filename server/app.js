@@ -24,7 +24,6 @@ app.post('/api/articles/:article_id/comments', postArticleComment)
 app.get('/api/users', getUsers)
 
 
-
 //catch response for incorrect paths
 app.all('/api/*',(req, res, next) => {
     res.status(404).send({ msg: "Path not found" })

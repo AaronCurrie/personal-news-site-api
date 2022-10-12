@@ -15,7 +15,6 @@ exports.fetchComments = (id) => {
     })
 }
 
-//you are working on this. how do we get teh time ?? utils??
 exports.addCommentToArticle = (id, sentData) => {
 
     const username = sentData.username;
@@ -23,8 +22,6 @@ exports.addCommentToArticle = (id, sentData) => {
 
     return db.query('INSERT INTO comments (body, author, article_id) VALUES ($1, $2, $3) RETURNING *;', [body, username, id])
     .then(({rows: article}) => {
-
-        return article[0]
-        
+        return article[0] 
     })
 }
