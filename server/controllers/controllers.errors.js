@@ -12,6 +12,8 @@ exports.psqlErrors = (err, req, res, next) => {
         res.status(400).send({msg: 'incorrect data type inputted'})
     } else if(err.code === '23502') {
         res.status(400).send({msg: 'incorrect data format'})
+    } else if(err.code === '23503') {
+        res.status(404).send({msg: 'Information not found'})
     } else {
         next(err)
     }
