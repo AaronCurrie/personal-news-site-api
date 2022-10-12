@@ -1,10 +1,10 @@
 const express = require('express');
 
-const { getTopics } = require('./controllers/controllers.topics')
-const { getArticle, getAllArticles, patchArticle, getArticleComments } = require('./controllers/controllers.articles')
-const { getUsers } = require('./controllers/controllers.users')
-const { psqlErrors, internalError, javascriptErrors} = require('./controllers/controllers.errors')
-const { postArticleComment } = require('./controllers/controllers.comment')
+const { getTopics } = require('./controllers/controllersTopics')
+const { getArticle, getAllArticles, patchArticle, getArticleComments } = require('./controllers/controllersArticles')
+const { getUsers } = require('./controllers/controllersUsers')
+const { psqlErrors, internalError, javascriptErrors} = require('./controllers/controllersErrors')
+const { postArticleComment, deleteComment } = require('./controllers/controllersComment')
 const apiData = require('../endpoints.json')
 
 const app = express();
@@ -28,6 +28,9 @@ app.post('/api/articles/:article_id/comments', postArticleComment)
 
 //api/users
 app.get('/api/users', getUsers)
+
+//api/comments
+app.delete('/api/comments/:comment_id', deleteComment)
 
 
 //catch response for incorrect paths
