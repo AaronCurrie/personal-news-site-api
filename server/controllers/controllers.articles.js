@@ -16,22 +16,24 @@ exports.getArticle = (req, res, next) => {
     })
 }
 
-
-
 exports.getAllArticles = (req, res, next) => {
-    const query = req.query.topic;
+    const topic = req.query.topic;
+    const sort = req.query.sort_by;
+    const order = req.query.order
 
-    const promises = [fetchAllArticles(query)]
+    const promises = [fetchAllArticles(topic, sort, order)]
 
-    if(query) {
-        promises.push(checkTopicsSlugs(query))
+    if(topic) {
+        promises.push(checkTopicsSlugs(topic))
     }
 
     return Promise.all(promises)
     .then((promises) => {
         res.status(200).send({articles: promises[0]})
     })
-    .catch(err => next(err))
+    .catch(err => {
+        next(err)
+    })
 }
 
 exports.patchArticle = (req, res, next) => {

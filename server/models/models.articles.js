@@ -18,17 +18,47 @@ exports.fetchArticle = (id) => {
     })
 }
 
-exports.fetchAllArticles = (query) => {
+exports.fetchAllArticles = (topic, sort, order) => {
+    const validSorts = ['title', 'topic', 'author', 'body', 'created_at', 'votes', 'comment_count']
+    const validOrders = ['ASC', 'DESC']
+    if(order){
+        order = order.toUpperCase();
+    }
+
+    if (sort && !validSorts.includes(sort)) {
+        return Promise.reject({
+            status: 400,
+            msg: 'invalid sort by query',
+        });
+    }
+
+    if (order && !validOrders.includes(order)) {
+        return Promise.reject({
+            status: 400,
+            msg: 'invalid order query',
+        });
+    }
 
     const queryArr = [];
     let baseQuery = `SELECT articles.*, COUNT(comments.article_id) ::INT AS comment_count
     FROM articles
     LEFT JOIN comments ON articles.article_id = comments.article_id`;
-    if(query) {
+    if(topic) {
         baseQuery += ` WHERE topic=$1`;
-        queryArr.push(query)
+        queryArr.push(topic)
     }
-    baseQuery += ` GROUP BY articles.article_id ORDER BY created_at DESC;`;
+    baseQuery += ` GROUP BY articles.article_id`
+    let sortQuery = ` ORDER BY created_at`
+    if(sort) {
+        sortQuery = ` ORDER BY ${sort}`
+    }
+    baseQuery += sortQuery;
+    let orderQuery = ` DESC`
+    if(order) {
+        orderQuery = ` ${order}`
+    }
+    baseQuery += orderQuery
+    baseQuery += `;`
 
     return db.query(baseQuery, queryArr)
     .then(({ rows: articles }) => {
