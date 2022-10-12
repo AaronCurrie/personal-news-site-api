@@ -1,6 +1,6 @@
-const { addCommentToArticle } = require('../models/models.comments')
+const { addCommentToArticle, removeComment } = require('../models/models.comments')
 const { fetchArticle} = require('../models/models.articles')
-const { createRef, formatComments } = require('../../db/seeds/utils')
+const { response } = require('express');
 
 
 exports.postArticleComment = (req, res, next) => {
@@ -10,6 +10,18 @@ exports.postArticleComment = (req, res, next) => {
     addCommentToArticle(id, body)
     .then(comment => {
         res.status(201).send({comment})
+    })
+    .catch(err => {
+        next(err)
+    })
+}
+
+exports.deleteComment = (req, res, next) => {
+    const id = req.params.comment_id;
+
+    removeComment(id)
+    .then(() => {
+        res.status(204).send()
     })
     .catch(err => {
         next(err)

@@ -1,5 +1,4 @@
 const db = require('../../db/connection')
-const { convertTimestampToDate } = require('../../db/seeds/utils')
 
 exports.fetchComments = (id) => {
     return db.query(`
@@ -23,5 +22,16 @@ exports.addCommentToArticle = (id, sentData) => {
     return db.query('INSERT INTO comments (body, author, article_id) VALUES ($1, $2, $3) RETURNING *;', [body, username, id])
     .then(({rows: article}) => {
         return article[0] 
+    })
+}
+
+exports.removeComment = (id) => {
+    return db.query('DELETE FROM comments WHERE comment_id=$1 RETURNING *;', [id])
+    .then(({rowCount}) => {
+        if(rowCount === 0) {
+            return Promise.reject({ status: 404, msg: 'comment id does not exist, nothing deleted'})
+        } else {
+            return
+        }  
     })
 }

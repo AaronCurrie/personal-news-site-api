@@ -100,3 +100,15 @@ describe('POST /api/articles/id/comment', () => {
         })
     })
 });
+
+describe('DELETE api/comment/comment_id', () => {
+    test('returns 204 and returns nothing', () => {
+        return request(app).delete('/api/comments/1').expect(204)
+    });
+    test('returns 404 if comment_id is invalid', () => {
+        return request(app).delete('/api/comments/9999').expect(404)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('comment id does not exist, nothing deleted')
+        })
+    });
+});
