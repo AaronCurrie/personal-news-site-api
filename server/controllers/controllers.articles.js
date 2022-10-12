@@ -19,8 +19,9 @@ exports.getArticle = (req, res, next) => {
 exports.getAllArticles = (req, res, next) => {
     const topic = req.query.topic;
     const sort = req.query.sort_by;
+    const order = req.query.order
 
-    const promises = [fetchAllArticles(topic, sort)]
+    const promises = [fetchAllArticles(topic, sort, order)]
 
     if(topic) {
         promises.push(checkTopicsSlugs(topic))
@@ -31,7 +32,6 @@ exports.getAllArticles = (req, res, next) => {
         res.status(200).send({articles: promises[0]})
     })
     .catch(err => {
-        console.log(err)
         next(err)
     })
 }

@@ -18,13 +18,24 @@ exports.fetchArticle = (id) => {
     })
 }
 
-exports.fetchAllArticles = (topic, sort) => {
-    const validSorts = ['title', 'topic', 'author', 'body', 'created_at', 'votes']
+exports.fetchAllArticles = (topic, sort, order) => {
+    const validSorts = ['title', 'topic', 'author', 'body', 'created_at', 'votes', 'comment_count']
+    const validOrders = ['ASC', 'DESC']
+    if(order){
+        order = order.toUpperCase();
+    }
 
     if (sort && !validSorts.includes(sort)) {
         return Promise.reject({
             status: 400,
             msg: 'invalid sort by query',
+        });
+    }
+
+    if (order && !validOrders.includes(order)) {
+        return Promise.reject({
+            status: 400,
+            msg: 'invalid order query',
         });
     }
 
@@ -37,15 +48,20 @@ exports.fetchAllArticles = (topic, sort) => {
         queryArr.push(topic)
     }
     baseQuery += ` GROUP BY articles.article_id`
-    let orderQuery = ` ORDER BY created_at DESC;`
+    let sortQuery = ` ORDER BY created_at`
     if(sort) {
-        orderQuery = ` ORDER BY ${sort} DESC;`
+        sortQuery = ` ORDER BY ${sort}`
     }
-    baseQuery += orderQuery;
+    baseQuery += sortQuery;
+    let orderQuery = ` DESC`
+    if(order) {
+        orderQuery = ` ${order}`
+    }
+    baseQuery += orderQuery
+    baseQuery += `;`
 
     return db.query(baseQuery, queryArr)
     .then(({ rows: articles }) => {
-        console.log(articles)
         return articles;
     });
 }

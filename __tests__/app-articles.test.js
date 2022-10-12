@@ -232,7 +232,7 @@ describe('sort Query for api/articles', () => {
     })
 });
 
-xdescribe('order query changes the sort to asc or desc', () => {
+describe('order query changes the sort to asc or desc', () => {
     test('asc input changes the order to ascending', () => {
         return request(app).get('/api/articles?order=asc').expect(200)
         .then(({ body: { articles } }) => {
@@ -241,7 +241,7 @@ xdescribe('order query changes the sort to asc or desc', () => {
     });
 
     test('desc input changes the order to descending', () => {
-        return request(app).get('/api/articles?order=asc').expect(200)
+        return request(app).get('/api/articles?order=desc').expect(200)
         .then(({ body: { articles } }) => {
             expect(articles).toBeSortedBy('created_at' ,{descending: true})
         })
@@ -255,9 +255,9 @@ xdescribe('order query changes the sort to asc or desc', () => {
     });
 
     test('returns 404 when order order is not asc or desc', () => {
-        return request(app).get('/api/articles?order=bigFirst').expect(404)
+        return request(app).get('/api/articles?order=bigFirst').expect(400)
         .then(({ body: { msg } }) => {
-            expect(msg).toBe('Information not found')
+            expect(msg).toBe('invalid order query')
         })
     })
 });
