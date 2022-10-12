@@ -207,3 +207,50 @@ describe('api/articles', () => {
     });
 
 });
+
+
+xdescribe('sort Query for api/articles', () => {
+    test('orders articles by the inputted column', () => {
+        return request(app).get('/api/articles?sort_by=votes').expect(200)
+        .then(({ body: { articles } }) => {
+            expect(articles).toBeSortedBy('votes', {descending: true})
+        })
+    });
+
+    test('returns 404 when column does not exist', () => {
+        return request(app).get('/api/articles?sort_by=dateMade').expect(404)
+        .then(({ body: { msg } }) => {
+            expect(msg).toBe('Information not found')
+        })
+    })
+});
+
+xdescribe('order query changes the sort to asc or desc', () => {
+    test('asc input changes the order to ascending', () => {
+        return request(app).get('/api/articles?order=asc').expect(200)
+        .then(({ body: { articles } }) => {
+            expect(articles).toBeSortedBy('created_at')
+        })
+    });
+
+    test('desc input changes the order to descending', () => {
+        return request(app).get('/api/articles?order=asc').expect(200)
+        .then(({ body: { articles } }) => {
+            expect(articles).toBeSortedBy('created_at' ,{descending: true})
+        })
+    });
+
+    test('order query works with a sort by query to order buy the corect column', () => {
+        return request(app).get('/api/articles?order=asc&sort_by=votes').expect(200)
+        .then(({ body: { articles } }) => {
+            expect(articles).toBeSortedBy('votes')
+        })
+    });
+
+    test('returns 404 when order order is not asc or desc', () => {
+        return request(app).get('/api/articles?order=bigFirst').expect(404)
+        .then(({ body: { msg } }) => {
+            expect(msg).toBe('Information not found')
+        })
+    })
+});
