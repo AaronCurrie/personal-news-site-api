@@ -14,7 +14,9 @@ exports.psqlErrors = (err, req, res, next) => {
         res.status(400).send({msg: 'incorrect data format'})
     } else if(err.code === '23503') {
         res.status(404).send({msg: 'Information not found'})
-    } else {
+    } else if(err.code === '42703'){
+        res.status(404).send({msg: 'column does not exist'})
+    } else{
         next(err)
     }
 }

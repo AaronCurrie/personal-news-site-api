@@ -18,20 +18,34 @@ exports.fetchArticle = (id) => {
     })
 }
 
-exports.fetchAllArticles = (query) => {
+exports.fetchAllArticles = (topic, sort) => {
+    const validSorts = ['title', 'topic', 'author', 'body', 'created_at', 'votes']
+
+    if (!validSorts.includes(sort)) {
+        return Promise.reject({
+            status: 400,
+            msg: 'invalid sort by query',
+        });
+    }
 
     const queryArr = [];
     let baseQuery = `SELECT articles.*, COUNT(comments.article_id) ::INT AS comment_count
     FROM articles
     LEFT JOIN comments ON articles.article_id = comments.article_id`;
-    if(query) {
+    if(topic) {
         baseQuery += ` WHERE topic=$1`;
-        queryArr.push(query)
+        queryArr.push(topic)
     }
-    baseQuery += ` GROUP BY articles.article_id ORDER BY created_at DESC;`;
+    baseQuery += ` GROUP BY articles.article_id`
+    let orderQuery = ` ORDER BY created_at DESC;`
+    if(sort) {
+        orderQuery = ` ORDER BY ${sort} DESC;`
+    }
+    baseQuery += orderQuery;
 
     return db.query(baseQuery, queryArr)
     .then(({ rows: articles }) => {
+        console.log(articles)
         return articles;
     });
 }

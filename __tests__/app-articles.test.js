@@ -209,7 +209,7 @@ describe('api/articles', () => {
 });
 
 
-xdescribe('sort Query for api/articles', () => {
+describe('sort Query for api/articles', () => {
     test('orders articles by the inputted column', () => {
         return request(app).get('/api/articles?sort_by=votes').expect(200)
         .then(({ body: { articles } }) => {
@@ -217,10 +217,17 @@ xdescribe('sort Query for api/articles', () => {
         })
     });
 
-    test('returns 404 when column does not exist', () => {
-        return request(app).get('/api/articles?sort_by=dateMade').expect(404)
+    test('returns 400 when column does not exist', () => {
+        return request(app).get('/api/articles?sort_by=dateMade').expect(400)
         .then(({ body: { msg } }) => {
-            expect(msg).toBe('Information not found')
+            expect(msg).toBe('invalid sort by query')
+        })
+    })
+
+    test('returns 400 if sql injection is attempted', () => {
+        return request(app).get('/api/articles?sort_by=votes ASC; SELECT * FROM topics ORDER BY topic;').expect(400)
+        .then(({ body: { msg } }) => {
+            expect(msg).toBe('invalid sort by query')
         })
     })
 });
