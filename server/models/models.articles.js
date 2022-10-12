@@ -21,7 +21,7 @@ exports.fetchArticle = (id) => {
 exports.fetchAllArticles = (topic, sort) => {
     const validSorts = ['title', 'topic', 'author', 'body', 'created_at', 'votes']
 
-    if (!validSorts.includes(sort)) {
+    if (sort && !validSorts.includes(sort)) {
         return Promise.reject({
             status: 400,
             msg: 'invalid sort by query',
