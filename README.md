@@ -37,7 +37,7 @@ To run this project locally and access the data base follow these steps:
 3. add **PGDATABASE=nc_news** and **PGDATABASE=nc_news_test** to these files respectively
 4. use the scripts **npm run setup-dbs** and **npm run seed** to create and seed the data bases
 5. run the script **npm run test** to run the test suites or **npm run start** to run the server with the development data
-6. use an application like **insomnia** on port **9090** to see how the end point responses.
+6. use an application like **insomnia** on port **9090** to see the end point responses.
 
 node version 18.9.0 is recommended
 postgres version 8.7.3 is recommended
