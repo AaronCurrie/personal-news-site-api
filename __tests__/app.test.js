@@ -54,6 +54,36 @@ describe('GET/api/users', () => {
     });
 });
 
+describe('GET/api/users/:username', () => {
+    test('returns 200 and a user object', () => {
+        return request(app).get('/api/users/butter_bridge').expect(200)
+        .then(({ body: { user } }) => {
+            expect(user).toBeInstanceOf(Object);
+            expect(user).toEqual(
+                expect.objectContaining({
+                    username: 'butter_bridge',
+                    name: 'jonny',
+                    avatar_url: 'https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg'
+                })
+            );
+        });
+    });
+
+    test('incorrect id inputted', () => {
+        return request(app).get('/api/users/harry-pothead').expect(404)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('that username does not exsist')
+        })
+    });
+
+    test('bad request on path', () => {
+        return request(app).get('/api/users/1').expect(404)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('that username does not exsist')
+        })
+    });
+});
+
 describe('GET /api', () => {
     test('returns the json of instruction', () => {
         return request(app).get('/api').expect(200)
