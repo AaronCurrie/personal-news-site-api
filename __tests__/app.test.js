@@ -75,13 +75,6 @@ describe('GET/api/users/:username', () => {
             expect(msg).toBe('that username does not exsist')
         })
     });
-
-    test('bad request on path', () => {
-        return request(app).get('/api/users/1').expect(404)
-        .then(({body: { msg }}) => {
-            expect(msg).toBe('that username does not exsist')
-        })
-    });
 });
 
 describe('GET /api', () => {

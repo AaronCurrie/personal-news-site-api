@@ -1,6 +1,4 @@
-const { addCommentToArticle, removeComment } = require('../models/modelsComments')
-const { fetchArticle} = require('../models/modelsArticles')
-const { response } = require('express');
+const { addCommentToArticle, removeComment, updateCommentVotes } = require('../models/modelsComments')
 
 
 exports.postArticleComment = (req, res, next) => {
@@ -26,4 +24,15 @@ exports.deleteComment = (req, res, next) => {
     .catch(err => {
         next(err)
     })
+}
+
+exports.patchComment = (req, res, next) => {
+    const id = req.params.comment_id;
+    const body = req.body.inc_votes;
+
+    updateCommentVotes(id, body).then(comment => {
+        res.status(200).send({comment})
+
+    })
+    .catch(err => next(err))
 }

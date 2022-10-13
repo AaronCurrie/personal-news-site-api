@@ -117,3 +117,76 @@ describe('DELETE api/comment/comment_id', () => {
         })
     });
 });
+
+describe('PATCH/api/comments/:comment_id', () => {
+    test('returns a 200 and the updated oject when incrementing', () => {
+        const update = {inc_votes: 43}
+
+        return request(app).patch('/api/comments/1').send(update).expect(200)
+        .then(({ body: { comment } }) => {
+            expect(comment).toBeInstanceOf(Object);
+            expect(comment).toEqual(
+                expect.objectContaining({
+                    comment_id: 1,
+                    body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+                    votes: 59,
+                    author: "butter_bridge",
+                    article_id: 9,
+                    created_at: expect.any(String),
+                })
+            );
+        })
+    })
+
+    test('returns a 200 and the updated oject when decrementing', () => {
+        const update = {inc_votes: -1}
+
+        return request(app).patch('/api/comments/1').send(update).expect(200)
+        .then(({ body: { comment } }) => {
+            expect(comment).toBeInstanceOf(Object);
+            expect(comment).toEqual(
+                expect.objectContaining({
+                    comment_id: 1,
+                    body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+                    votes: 15,
+                    author: "butter_bridge",
+                    article_id: 9,
+                    created_at: expect.any(String),
+                })
+            );
+        })
+    })
+
+    test('incorrect id inputted', () => {
+        const update = {inc_votes: 43}
+        return request(app).patch('/api/comments/9999').send(update).expect(404)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('that comment id does not exsist')
+        })
+    });
+
+    test('bad request on path', () => {
+        const update = {inc_votes: 43}
+        return request(app).patch('/api/comments/one').send(update).expect(400)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('incorrect data type inputted')
+        })
+    });
+
+    test('returns 400 when inputted patch data is incorrect data type', () => {
+        const update = {inc_votes: 'one'}
+        return request(app).patch('/api/comments/1').send(update).expect(400)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('incorrect data type inputted')
+        })
+    });
+
+    test('returns 400 when incorrect patch data is inputted', () => {
+        const update = {body: 'I love coding'}
+        return request(app).patch('/api/comments/1').send(update).expect(400)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('incorrect data format')
+        })
+    });
+    
+})

@@ -35,3 +35,15 @@ exports.removeComment = (id) => {
         }  
     })
 }
+
+exports.updateCommentVotes = (id, votes) => {
+
+    return db.query(`UPDATE comments SET votes = votes + $2 WHERE comment_id = $1 RETURNING *;`, [id, votes])
+    .then(({rows: comment}) => {
+        if(comment.length === 0) {
+            return Promise.reject({ status: 404, msg: 'that comment id does not exsist'})
+        } else {
+            return comment[0]
+        }
+    })
+}
