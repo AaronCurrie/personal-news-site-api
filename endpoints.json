@@ -87,6 +87,10 @@
   "POST /api/articles/:article_id/comments": {
     "description": "posts a comment to the inputted article and serves up the new post",
     "queries": [],
+    "exampleRequest": {
+      "username": "butter_bridge",
+      "body": "I loved this article"
+    },
     "exampleResponse": {
       "comment":
       {
@@ -102,6 +106,9 @@
   "PATCH /api/articles/:article_id": {
     "description": "changes the articles votes of the article with inputted id and returns the updated article",
     "queries": [],
+    "exampleRequest": {
+      "inc_votes": 43
+    },
     "exampleResponse": {
       "comment":
       {
