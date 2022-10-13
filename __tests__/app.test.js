@@ -54,5 +54,15 @@ describe('GET/api/users', () => {
     });
 });
 
+describe('GET /api', () => {
+    test('returns the json of instruction', () => {
+        return request(app).get('/api').expect(200)
+        .expect(({body: {apiData}}) => {
+            const expectedData = require('../endpoints.json')
+            expect(apiData).toEqual(expectedData)
+        })
+    })
+});
+
 
 
