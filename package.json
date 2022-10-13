@@ -41,5 +41,8 @@
       "jest-extended/all",
       "jest-sorted"
     ]
+  },
+  "engines": {
+    "node": "18.9.0"
   }
 }
