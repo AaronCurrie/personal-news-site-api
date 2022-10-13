@@ -260,3 +260,65 @@ describe('order query changes the sort to asc or desc', () => {
         })
     })
 });
+
+describe('POST /api/articles', () => {
+    test('return 201 and posted article is returned if a valid username and topic is provided', () => {
+        const input = {
+            author: 'butter_bridge', 
+            body: 'this article is about how I become the most powerful coding ledgend on the planet...',
+            title: 'power comes power goes',
+            topic: 'paper'
+        }
+
+        return request(app).post('/api/articles').send(input).expect(201)
+        .then(({ body: { article } }) => {
+            expect(article).toBeInstanceOf(Object);
+            expect(article).toEqual(
+                expect.objectContaining({
+                    author: 'butter_bridge', 
+                    body: 'this article is about how I become the most powerful coding ledgend on the planet...',
+                    title: 'power comes power goes',
+                    topic: 'paper',
+                    article_id: expect.any(Number),
+                    created_at: expect.any(String),
+                    comment_count: 0,
+                    votes: 0
+                })
+            );
+        })
+    });
+
+    test('returns 400 when incorrect post data is inputted', () => {
+        const input = {article_name: 'I love coding'}
+        return request(app).post('/api/articles').send(input).expect(400)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('incorrect data format')
+        })
+    });
+
+    test('returns 404 and fails to post if username does not exist', () => {
+        const input = {
+            author: 'aaron_currie', 
+            body: 'this article is about how I become the most powerful coding ledgend on the planet...',
+            title: 'power comes power goes',
+            topic: 'paper'
+        }
+        return request(app).post('/api/articles').send(input).expect(404)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('something went wrong, inputted data incorrect')
+        })
+    })
+
+    test('returns 404 and fails to post if topic does not exist', () => {
+        const input = {
+            author: 'butter_bridge', 
+            body: 'this article is about how I become the most powerful coding ledgend on the planet...',
+            title: 'power comes power goes',
+            topic: 'POWER'
+        }
+        return request(app).post('/api/articles').send(input).expect(404)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('something went wrong, inputted data incorrect')
+        })
+    })
+});

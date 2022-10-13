@@ -1,5 +1,5 @@
 
-const { fetchArticle, fetchAllArticles, updateArticleVotes } = require('../models/modelsArticles')
+const { fetchArticle, fetchAllArticles, updateArticleVotes, addArticle } = require('../models/modelsArticles')
 const { fetchComments } = require('../models/modelsComments');
 const { checkTopicsSlugs } = require('../models/modelsTopics');
 
@@ -58,4 +58,16 @@ exports.getArticleComments = (req, res, next) => {
     })
     .catch(err => next(err))
 
+}
+
+exports.postArticle = (req, res, next) => {
+    const body = req.body;
+    
+    addArticle(body)
+    .then(article => {
+        res.status(201).send({article})
+    })
+    .catch(err => {
+        next(err)
+    })
 }

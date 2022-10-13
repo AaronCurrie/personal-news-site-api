@@ -71,7 +71,7 @@ describe('POST /api/articles/id/comment', () => {
         const input = {username: 'butter_bridge', body: 'I loved this article'}
         return request(app).post('/api/articles/9999/comments').send(input).expect(404)
         .then(({body: { msg }}) => {
-            expect(msg).toBe('Information not found')
+            expect(msg).toBe('something went wrong, inputted data incorrect')
         })
     });
 
@@ -95,7 +95,7 @@ describe('POST /api/articles/id/comment', () => {
         const input = {username: 'aaronCurrie', body: 'This is a great article'}
         return request(app).post('/api/articles/1/comments').send(input).expect(404)
         .then(({body: { msg }}) => {
-            expect(msg).toBe('Information not found')
+            expect(msg).toBe('something went wrong, inputted data incorrect')
         })
     })
 });

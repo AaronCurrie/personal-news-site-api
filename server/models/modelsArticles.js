@@ -77,3 +77,27 @@ exports.updateArticleVotes = (id, votes) => {
         }
     })
 }
+
+exports.addArticle = (sentData) => {
+    const username = sentData.author;
+    const body = sentData.body;
+    const title = sentData.title;
+    const topic = sentData.topic
+
+    return db.query(`
+    INSERT INTO articles (body, author, title, topic) 
+    VALUES ($1, $2, $3, $4)
+    `, [body, username, title, topic])
+    .then(() => {
+        return db.query(`
+    SELECT articles.*, COUNT(comments.article_id) ::INT AS comment_count
+    FROM articles 
+    LEFT JOIN comments ON articles.article_id = comments.article_id
+    WHERE articles.article_id = (SELECT MAX(articles.article_id) FROM articles)
+    GROUP BY articles.article_id
+    `)
+    })
+    .then(({rows: [article]}) => {
+        return article
+    })
+}
