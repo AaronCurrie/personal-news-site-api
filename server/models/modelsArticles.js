@@ -114,3 +114,20 @@ exports.addArticle = (sentData) => {
         return article
     })
 }
+
+exports.removeArticle = (id) => {
+    return db.query(`
+    DELETE FROM comments WHERE article_id=$1;
+    `, [id])
+    .then(() => {
+        return db.query(`
+        DELETE FROM articles WHERE article_id=$1 RETURNING *;`, [id])
+    })
+    .then(({rowCount}) => {
+        if(rowCount === 0) {
+            return Promise.reject({ status: 404, msg: 'article id does not exist, nothing deleted'})
+        } else {
+            return
+        }  
+    })
+}

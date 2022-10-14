@@ -429,3 +429,24 @@ describe('api/articles also returns a total count of articles', () => {
         });
     });
 });
+
+describe('DELETE api/article/article_id', () => {
+    test('deletes article returns 204 and returns nothing', () => {
+        return request(app).delete('/api/articles/2').expect(204)
+    });
+    test.only('deletes article and its comments returns 204 and returns nothing if article has comments', () => {
+        return request(app).delete('/api/articles/1').expect(204)
+    });
+    test('returns 404 if article_id is does not exist', () => {
+        return request(app).delete('/api/articles/9999').expect(404)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('article id does not exist, nothing deleted')
+        })
+    });
+    test('returns 400 if article_id is invalid', () => {
+        return request(app).delete('/api/articles/apples').expect(400)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('incorrect data type inputted')
+        })
+    });
+});

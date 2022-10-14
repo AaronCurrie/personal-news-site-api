@@ -1,5 +1,5 @@
 
-const { fetchArticle, fetchAllArticles, updateArticleVotes, addArticle, fetchArticlesByPage } = require('../models/modelsArticles')
+const { fetchArticle, fetchAllArticles, updateArticleVotes, addArticle, fetchArticlesByPage, removeArticle } = require('../models/modelsArticles')
 const { fetchCommentsByPage, fetchComments } = require('../models/modelsComments');
 const { checkTopicsSlugs } = require('../models/modelsTopics');
 
@@ -94,6 +94,18 @@ exports.postArticle = (req, res, next) => {
     addArticle(body)
     .then(article => {
         res.status(201).send({article})
+    })
+    .catch(err => {
+        next(err)
+    })
+}
+
+exports.deleteArticle = (req, res, next) => {
+    const id = req.params.article_id;
+
+    removeArticle(id)
+    .then(() => {
+        res.status(204).send()
     })
     .catch(err => {
         next(err)
