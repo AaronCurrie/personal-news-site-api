@@ -43,7 +43,7 @@ exports.getAllArticles = (req, res, next) => {
                 articles: promises[0],
                 displayed_on_page: promises[0].length,
                 total_count: total_count,
-                page: `${Number(inputtedPageNumber)} of ${total_pages}`
+                page: `${inputtedPageNumber} of ${total_pages}`
             })
         }
 
@@ -84,7 +84,7 @@ exports.getArticleComments = (req, res, next) => {
                     comments : promises[0],
                     displayed_on_page: promises[0].length,
                     total_count: total_count,
-                    page: `${Number(inputtedPageNumber)} of ${total_pages}`
+                    page: `${inputtedPageNumber} of ${total_pages}`
                 })
         }
     })
