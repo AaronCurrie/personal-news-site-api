@@ -33,15 +33,17 @@ exports.getAllArticles = (req, res, next) => {
 
     return Promise.all(promises)
     .then((promises) => {
-        if(page > Number(promises[1].length)) {
+        const total_count = Number(promises[1].length)
+        const total_pages = (Math.ceil(total_count / limit) === 0) ? 1 : Math.ceil(total_count / limit);
+        if(inputtedPageNumber > total_pages) {
             res.status(404).send({msg: 'that page does not exist'})
         } else {
             res.status(200).send(
             {
                 articles: promises[0],
                 displayed_on_page: promises[0].length,
-                total_count: Number(promises[1].length),
-                page: Number(inputtedPageNumber),
+                total_count: total_count,
+                page: `${Number(inputtedPageNumber)} of ${total_pages}`
             })
         }
 
@@ -72,15 +74,17 @@ exports.getArticleComments = (req, res, next) => {
 
     Promise.all(promises)
     .then(promises => {
-        if(page > Number(promises[1].length)) {
+        const total_count = Number(promises[1].length)
+        const total_pages = (Math.ceil(total_count / limit) === 0) ? 1 : Math.ceil(total_count / limit);
+        if(inputtedPageNumber > total_pages) {
             res.status(404).send({msg: 'that page does not exist'})
         } else {
             res.status(200).send(
                 {
                     comments : promises[0],
                     displayed_on_page: promises[0].length,
-                    total_count: Number(promises[1].length),
-                    page: Number(inputtedPageNumber)
+                    total_count: total_count,
+                    page: `${Number(inputtedPageNumber)} of ${total_pages}`
                 })
         }
     })
