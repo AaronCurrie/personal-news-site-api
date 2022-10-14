@@ -12,7 +12,7 @@ The app is currently hosted at https://ac-nc-news-server.herokuapp.com/ *
 
 The current end points are listed below:
 
-GET /api                                -> returns a list of endpoints and how to use them
+GET /api                                    -> returns a list of endpoints and how to use them
 
 GET /api/topics                         -> returns a list of topics
 
