@@ -400,7 +400,6 @@ describe('api/articles p query to set start page', () => {
             expect(msg).toBe('that page does not exist')
         })
     });
-    //can i make it if offset is higher than count it loops around
 });
 
 describe('api/articles also returns a total count of articles', () => {

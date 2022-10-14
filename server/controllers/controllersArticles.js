@@ -1,6 +1,6 @@
 
 const { fetchArticle, fetchAllArticles, updateArticleVotes, addArticle, fetchArticlesByPage } = require('../models/modelsArticles')
-const { fetchComments } = require('../models/modelsComments');
+const { fetchCommentsByPage, fetchComments } = require('../models/modelsComments');
 const { checkTopicsSlugs } = require('../models/modelsTopics');
 
 
@@ -64,12 +64,25 @@ exports.patchArticle = (req, res, next) => {
 
 exports.getArticleComments = (req, res, next) => {
     const id = req.params.article_id;
+    const limit = (req.query.limit) ? req.query.limit : 10;
+    const inputtedPageNumber = (req.query.p) ? req.query.p : 1;
+    const page = (req.query.p) ? ((req.query.p - 1) * limit ): 0;
 
-    const promises = [fetchComments(id), fetchArticle(id)]
+    const promises = [fetchCommentsByPage(id, limit, page),fetchComments(id), fetchArticle(id)]
 
     Promise.all(promises)
     .then(promises => {
-        res.status(200).send({comments : promises[0]})
+        if(page > Number(promises[1].length)) {
+            res.status(404).send({msg: 'that page does not exist'})
+        } else {
+            res.status(200).send(
+                {
+                    comments : promises[0],
+                    displayed_on_page: promises[0].length,
+                    total_count: Number(promises[1].length),
+                    page: Number(inputtedPageNumber)
+                })
+        }
     })
     .catch(err => next(err))
 

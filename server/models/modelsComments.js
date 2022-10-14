@@ -1,5 +1,20 @@
 const db = require('../../db/connection')
 
+exports.fetchCommentsByPage = (id, limit, page) => {
+    return db.query(`
+    SELECT comment_id, comments.votes, comments.created_at, comments.author, comments.body
+    FROM comments
+    JOIN articles ON comments.article_id = articles.article_id
+    WHERE articles.article_id=$1
+    ORDER BY created_at ASC
+    OFFSET $3 ROWS FETCH NEXT $2 ROWS ONLY
+    `, [id, limit, page])
+
+    .then(({rows: comments}) => {
+            return comments
+    })
+}
+
 exports.fetchComments = (id) => {
     return db.query(`
     SELECT comment_id, comments.votes, comments.created_at, comments.author, comments.body

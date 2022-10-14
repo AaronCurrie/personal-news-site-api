@@ -188,5 +188,85 @@ describe('PATCH/api/comments/:comment_id', () => {
             expect(msg).toBe('incorrect data format')
         })
     });
-    
 })
+
+
+//pagnation test
+describe('api/articles/id/comments limit query', () => {
+    test('comments have a default limit of 10 when no limit query is included', () => {
+        return request(app).get('/api/articles/1/comments').expect(200)
+        .then(({ body: { comments } }) => {
+            expect(comments).toBeInstanceOf(Array);
+            expect(comments.length).toBe(10)
+        });
+    });
+
+    test('if a limit query is included sets limit to that number', () => {
+        return request(app).get('/api/articles/1/comments?limit=5').expect(200)
+        .then(({ body: { comments } }) => {
+            expect(comments).toBeInstanceOf(Array);
+            expect(comments.length).toBe(5)
+        });
+    });
+
+    test('if inputted query is not a number returns 400', () => {
+        return request(app).get('/api/articles/1/comments?limit=ten').expect(400)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('incorrect data type inputted')
+        })
+    });
+});
+
+describe('api/articles/id/comments p query to set start page', () => {
+    test('p query sets the starting page to correct spot depending on the limit', () => {
+        return request(app).get('/api/articles/1/comments?limit=2&p=2').expect(200)
+        .then(({ body: { comments } }) => {
+            expect(comments).toBeInstanceOf(Array);
+            expect(comments.length).toBe(2)
+            expect(comments).toEqual( 
+            [{
+                body: "Replacing the quiet elegance of the dark suit and tie with the casual indifference of these muted earth tones is a form of fashion suicide, but, uh, call me crazy — onyou it works.",
+                votes: 100,
+                author: "icellusedkars",
+                created_at: expect.any(String),
+                comment_id: expect.any(Number)
+            },
+            {
+                body: "Massive intercranial brain haemorrhage",
+                votes: 0,
+                author: "icellusedkars",
+                created_at: expect.any(String),
+                comment_id: expect.any(Number)
+            }])
+        });
+    });
+
+    test('returns a shorted array if its the last page and doesnt hit the limit', () => {
+        return request(app).get('/api/articles/1/comments?limit=5&p=3').expect(200)
+        .then(({ body: { comments } }) => {
+            expect(comments).toBeInstanceOf(Array);
+            expect(comments.length).toBe(1)
+        });
+    });
+
+    test('if p query is higher than the number of pages returns returns 404', () => {
+        return request(app).get('/api/articles/1/comments?limit=5&p=5').expect(404)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('that page does not exist')
+        });
+    });
+
+    test('if inputted query is not a number returns 400', () => {
+        return request(app).get('/api/articles/1/comments?limit=5&p=one').expect(400)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('incorrect data type inputted')
+        })
+    });
+
+    test('page does not exsit returns', () => {
+        return request(app).get('/api/articles/1/comments?limit=5&p=0').expect(404)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('that page does not exist')
+        })
+    });
+});
