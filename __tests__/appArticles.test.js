@@ -158,7 +158,7 @@ describe('api/articles', () => {
         return request(app).get('/api/articles').expect(200)
         .then(({ body: { articles } }) => {
             expect(articles).toBeInstanceOf(Array);
-            expect(articles.length).toBe(12)
+            expect(articles.length).toBe(10)
             articles.forEach(article => {
                 expect(article).toEqual(expect.objectContaining({
                     author: expect.any(String),
@@ -321,4 +321,112 @@ describe('POST /api/articles', () => {
             expect(msg).toBe('something went wrong, inputted data incorrect')
         })
     })
+});
+
+describe('api/articles limit query', () => {
+    test('articles has a default limit of 10 when no limit query is included', () => {
+        return request(app).get('/api/articles').expect(200)
+        .then(({ body: { articles } }) => {
+            expect(articles).toBeInstanceOf(Array);
+            expect(articles.length).toBe(10)
+        });
+    });
+
+    test('if a limit query is included sets limit to that number', () => {
+        return request(app).get('/api/articles?limit=5').expect(200)
+        .then(({ body: { articles } }) => {
+            expect(articles).toBeInstanceOf(Array);
+            expect(articles.length).toBe(5)
+        });
+    });
+
+    test('if inputted query is not a number returns 400', () => {
+        return request(app).get('/api/articles?limit=ten').expect(400)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('incorrect data type inputted')
+        })
+    });
+});
+
+describe('api/articles p query to set start page', () => {
+    test('p query sets the starting page to correct spot depending on the limit', () => {
+        return request(app).get('/api/articles?limit=2&p=2&sort_by=article_id').expect(200)
+        .then(({ body: { articles } }) => {
+            expect(articles).toBeInstanceOf(Array);
+            expect(articles.length).toBe(2)
+            expect(articles).toEqual( 
+            [{
+                article_id: 10,
+                title: "Seven inspirational thought leaders from Manchester UK",
+                topic: "mitch",
+                author: "rogersop",
+                body: "Who are we kidding, there is only one, and it's Mitch!",
+                created_at: 1589433300000,
+                votes: 0,
+                comment_count: expect.any(Number),
+                created_at: expect.any(String)
+            },
+            {
+                article_id: 9,
+                title: "They're not exactly dogs, are they?",
+                topic: "mitch",
+                author: "butter_bridge",
+                body: "Well? Think about it.",
+                created_at: 1591438200000,
+                votes: 0,
+                comment_count: expect.any(Number),
+                created_at: expect.any(String)
+            }])
+        });
+    });
+
+    test('if p query is higher than the number of pages returns returns 404', () => {
+        return request(app).get('/api/articles?limit=5&p=5').expect(404)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('that page does not exist')
+        });
+    });
+
+    test('if inputted query is not a number returns 400', () => {
+        return request(app).get('/api/articles?limit=5&p=one').expect(400)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('incorrect data type inputted')
+        })
+    });
+
+    test('page does not exsit returns', () => {
+        return request(app).get('/api/articles?limit=5&p=0').expect(404)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('that page does not exist')
+        })
+    });
+    //can i make it if offset is higher than count it loops around
+});
+
+describe('api/articles also returns a total count of articles', () => {
+    test('total count shows the correct number of articles discounting the limit', () => {
+        return request(app).get('/api/articles').expect(200)
+        .then(({ body }) => {
+            expect(body.total_count).toBe(12);
+            expect(body.articles.length).toBe(10)
+        });
+    });
+
+    test('total count shows the correct number of articles if a filter is applied', () => {
+        return request(app).get('/api/articles?topic=mitch').expect(200)
+        .then(({ body }) => {
+            expect(body.total_count).toBe(11);
+            expect(body.articles.length).toBe(10)
+            expect(body.page).toBe(1)
+        });
+    });
+
+    test('total count shows the correct number of articles when a limit and p number are included', () => {
+        return request(app).get('/api/articles?topic=mitch&limit=5&p=2').expect(200)
+        .then(({ body }) => {
+            expect(body.total_count).toBe(11);
+            expect(body.articles.length).toBe(5)
+            expect(body.page).toBe(2)
+        });
+    });
 });

@@ -1,10 +1,10 @@
 
 
 \c nc_news_test
-    INSERT INTO articles (body, author, title, topic) 
-    VALUES ('hello', 'butter_bridge', 'power', 'cats');
-    SELECT articles.*, COUNT(comments.article_id) ::INT AS comment_count
-    FROM articles 
-    LEFT JOIN comments ON articles.article_id = comments.article_id
-    WHERE articles.article_id = (SELECT MAX(articles.article_id) FROM articles)
-    GROUP BY articles.article_id
+SELECT articles.*, COUNT(comments.article_id) ::INT AS comment_count
+DECLARE @MaxTable FLOAT = COUNT(*) from articles
+FROM articles
+LEFT JOIN comments ON articles.article_id = comments.article_id
+GROUP BY articles.article_id
+ORDER BY article_id DESC
+OFFSET 0 ROWS FETCH NEXT 4 ROWS ONLY;

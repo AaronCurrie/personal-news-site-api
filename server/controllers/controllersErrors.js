@@ -16,6 +16,8 @@ exports.psqlErrors = (err, req, res, next) => {
         res.status(404).send({msg: 'something went wrong, inputted data incorrect'})
     } else if(err.code === '42703'){
         res.status(404).send({msg: 'column does not exist'})
+    } else if(err.code === '2201X') {
+        res.status(404).send({msg: 'that page does not exist'})
     } else{
         next(err)
     }
