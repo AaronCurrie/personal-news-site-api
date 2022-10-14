@@ -20,3 +20,14 @@ exports.checkTopicsSlugs = (query) => {
         
     });
 }
+
+exports.addTopic = (sentData) => {
+
+    const slug = sentData.slug;
+    const description = sentData.description
+
+    return db.query('INSERT INTO topics (slug, description) VALUES ($1, $2) RETURNING *;', [slug, description])
+    .then(({rows: article}) => {
+        return article[0] 
+    })
+}

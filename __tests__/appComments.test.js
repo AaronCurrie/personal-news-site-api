@@ -190,8 +190,6 @@ describe('PATCH/api/comments/:comment_id', () => {
     });
 })
 
-
-//pagnation test
 describe('api/articles/id/comments limit query', () => {
     test('comments have a default limit of 10 when no limit query is included', () => {
         return request(app).get('/api/articles/1/comments').expect(200)

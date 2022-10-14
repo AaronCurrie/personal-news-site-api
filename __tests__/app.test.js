@@ -88,4 +88,30 @@ describe('GET /api', () => {
 });
 
 
+describe('POST /api/topic', () => {
+    test('return 201 and posted topic is returned', () => {
+        const input = {slug: 'Horseback Archery', description: 'The skill of shooting arrows from horseback'}
+
+        return request(app).post('/api/topics').send(input).expect(201)
+        .then(({ body: { topic } }) => {
+            expect(topic).toBeInstanceOf(Object);
+            expect(topic).toEqual(
+                expect.objectContaining({
+                    slug: 'Horseback Archery', 
+                    description: 'The skill of shooting arrows from horseback'
+                })
+            );
+        })
+    });
+
+    test('returns 400 when incorrect post data is inputted', () => {
+        const input = {topic: 'Horseback Archery', description: 'The skill of shooting arrows from horseback'}
+        return request(app).post('/api/topics').send(input).expect(400)
+        .then(({body: { msg }}) => {
+            expect(msg).toBe('incorrect data format')
+        })
+    });
+
+});
+
 
