@@ -13,13 +13,18 @@ The app is currently hosted at https://ac-nc-news-server.herokuapp.com/ *
 The current end points are listed below:
 GET /api                                -> returns a list of endpoints and how to use them
 GET /api/topics                         -> returns a list of topics
+POST /api/topics                        -> adds a new topic and returns the comment
+GET /api/articles                       -> returns a list of the articles
+POST /api/articles                      -> adds a new article and returns the comment
 GET /api/articles/:article_id           -> returns an article with the specified id
-GET /api/articles'                      -> returns a list of the articles
 PATCH /api/articles/:article_id         -> updates the votes of the article with the specified id and returns the article
+DELETE /api/articles/:article_id        -> deletes article with the specified id
 GET /api/articles/:article_id/comments  -> returns all the comments of the specified article
 POST /api/articles/:article_id/comments -> adds a new comment to the specified article and returns the comment
+PATCH /api/comments/:comment_id         -> updates the votes of the comment with the specified id and returns the comment
+DELETE /api/comments/:comment_id        -> deletes comment with the specified id
 GET /api/users                          -> returns a list of users
-DELETE /api/comments/:comment_id        -> returns a comment with the specified id
+GET /api/users/:username                -> returns a user
 
 *Heroku is changing its policy on the 22nd Nov 2022 to no longer include postgresql becasue of this the app may be down for some time while a alternative hosting provider is found. 
 
