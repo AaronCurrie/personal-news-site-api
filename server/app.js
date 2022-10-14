@@ -9,7 +9,6 @@ app.use(express.json())
 //api router
 app.use('/api', apiRouter)
 
-
 //catch response for incorrect paths
 app.all('/api/*',(req, res, next) => {
     res.status(404).send({ msg: "Path not found" })
