@@ -1,14 +1,13 @@
 const cors = require('cors');
-app.use(cors());
-
 const express = require('express');
+const app = express();
+
+app.use(cors());
+app.use(express.json())
+
 const apiRouter = require('./routes/apiRouter')
 
-
 const { psqlErrors, internalError, javascriptErrors} = require('./controllers/controllersErrors')
-
-const app = express();
-app.use(express.json())
 
 //api router
 app.use('/api', apiRouter)
