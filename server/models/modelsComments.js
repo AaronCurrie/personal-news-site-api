@@ -6,7 +6,7 @@ exports.fetchCommentsByPage = (id, limit, page) => {
     FROM comments
     JOIN articles ON comments.article_id = articles.article_id
     WHERE articles.article_id=$1
-    ORDER BY created_at ASC
+    ORDER BY created_at DESC
     OFFSET $3 ROWS FETCH NEXT $2 ROWS ONLY
     `, [id, limit, page])
 
